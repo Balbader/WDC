@@ -6,12 +6,12 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { pageTitleStyles } from "@/styles/common";
 import { cn } from "@/lib/utils";
@@ -24,126 +24,126 @@ import { LoaderButton } from "@/components/loader-button";
 import { useServerAction } from "zsa-react";
 
 const registrationSchema = z
-  .object({
-    password: z.string().min(8),
-    token: z.string(),
-    passwordConfirmation: z.string().min(8),
-  })
-  .refine((data) => data.password === data.passwordConfirmation, {
-    message: "Passwords don't match",
-    path: ["passwordConfirmation"],
-  });
+    .object({
+        password: z.string().min(8),
+        token: z.string(),
+        passwordConfirmation: z.string().min(8),
+    })
+    .refine((data) => data.password === data.passwordConfirmation, {
+        message: "Passwords don't match",
+        path: ["passwordConfirmation"],
+    });
 
 export default function ResetPasswordPage({
-  searchParams,
+    searchParams,
 }: {
-  searchParams: { token: string };
+    searchParams: { token: string };
 }) {
-  const form = useForm<z.infer<typeof registrationSchema>>({
-    resolver: zodResolver(registrationSchema),
-    defaultValues: {
-      password: "",
-      token: searchParams.token,
-      passwordConfirmation: "",
-    },
-  });
-
-  const { execute, isPending, isSuccess, error } =
-    useServerAction(changePasswordAction);
-
-  function onSubmit(values: z.infer<typeof registrationSchema>) {
-    execute({
-      token: values.token,
-      password: values.password,
+    const form = useForm<z.infer<typeof registrationSchema>>({
+        resolver: zodResolver(registrationSchema),
+        defaultValues: {
+            password: "",
+            token: searchParams.token,
+            passwordConfirmation: "",
+        },
     });
-  }
 
-  return (
-    <div className="py-24 max-w-[400px] space-y-6 mx-auto">
-      {isSuccess && (
-        <>
-          <h1 className={cn(pageTitleStyles, "text-center")}>
-            Password Updated
-          </h1>
-          <Alert variant="success">
-            <Terminal className="h-4 w-4" />
-            <AlertTitle>Password updated</AlertTitle>
-            <AlertDescription>
-              Your password has been successfully updated.
-            </AlertDescription>
-          </Alert>
+    const { execute, isPending, isSuccess, error } =
+        useServerAction(changePasswordAction);
 
-          <Button variant="default" asChild className="w-full">
-            <Link href="/sign-in/email">Login with New Password</Link>
-          </Button>
-        </>
-      )}
+    function onSubmit(values: z.infer<typeof registrationSchema>) {
+        execute({
+            token: values.token,
+            password: values.password,
+        });
+    }
 
-      {!isSuccess && (
-        <>
-          <h1 className={cn(pageTitleStyles, "text-center")}>
-            Change Password
-          </h1>
+    return (
+        <div className="py-24 max-w-[400px] space-y-6 mx-auto">
+            {isSuccess && (
+                <>
+                    <h1 className={cn(pageTitleStyles, "text-center")}>
+                        Password Updated
+                    </h1>
+                    <Alert variant="success">
+                        <Terminal className="h-4 w-4" />
+                        <AlertTitle>Password updated</AlertTitle>
+                        <AlertDescription>
+                            Your password has been successfully updated.
+                        </AlertDescription>
+                    </Alert>
 
-          {error && (
-            <Alert variant="destructive">
-              <Terminal className="h-4 w-4" />
-              <AlertTitle>Uh-oh, something went wrong</AlertTitle>
-              <AlertDescription>{error.message}</AlertDescription>
-            </Alert>
-          )}
+                    <Button variant="default" asChild className="w-full">
+                        <Link href="/sign-in/email">Login with New Password</Link>
+                    </Button>
+                </>
+            )}
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="w-full"
-                        placeholder="Enter your new password"
-                        type="password"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            {!isSuccess && (
+                <>
+                    <h1 className={cn(pageTitleStyles, "text-center")}>
+                        Change Password
+                    </h1>
 
-              <FormField
-                control={form.control}
-                name="passwordConfirmation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="w-full"
-                        placeholder="Enter Confirm your Password"
-                        type="password"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                    {error && (
+                        <Alert variant="destructive">
+                            <Terminal className="h-4 w-4" />
+                            <AlertTitle>Uh-oh, something went wrong</AlertTitle>
+                            <AlertDescription>{error.message}</AlertDescription>
+                        </Alert>
+                    )}
 
-              <LoaderButton
-                isLoading={isPending}
-                className="w-full"
-                type="submit"
-              >
-                Change Password
-              </LoaderButton>
-            </form>
-          </Form>
-        </>
-      )}
-    </div>
-  );
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Password</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                className="w-full"
+                                                placeholder="Enter your new password"
+                                                type="password"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="passwordConfirmation"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Confirm Password</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                className="w-full"
+                                                placeholder="Enter Confirm your Password"
+                                                type="password"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <LoaderButton
+                                isLoading={isPending}
+                                className="w-full"
+                                type="submit"
+                            >
+                                Change Password
+                            </LoaderButton>
+                        </form>
+                    </Form>
+                </>
+            )}
+        </div>
+    );
 }
