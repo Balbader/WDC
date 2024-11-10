@@ -1,4 +1,4 @@
-"use client";
+"use client"; // Marks this as a client-side component
 
 import { z } from "zod";
 
@@ -23,6 +23,7 @@ import { changePasswordAction } from "./actions";
 import { LoaderButton } from "@/components/loader-button";
 import { useServerAction } from "zsa-react";
 
+// Define the validation schema for the password reset form
 const registrationSchema = z
     .object({
         password: z.string().min(8),
@@ -34,11 +35,14 @@ const registrationSchema = z
         path: ["passwordConfirmation"],
     });
 
+// Main component for the password reset page
+// Accepts a token from URL search parameters
 export default function ResetPasswordPage({
     searchParams,
 }: {
     searchParams: { token: string };
 }) {
+    // Initialize form with react-hook-form and zod validation
     const form = useForm<z.infer<typeof registrationSchema>>({
         resolver: zodResolver(registrationSchema),
         defaultValues: {
@@ -48,9 +52,14 @@ export default function ResetPasswordPage({
         },
     });
 
+    // Use server action hook for handling password change
+    // isPending: loading state
+    // isSuccess: successful submission state
+    // error: error state if submission fails
     const { execute, isPending, isSuccess, error } =
         useServerAction(changePasswordAction);
 
+    // Handle form submission
     function onSubmit(values: z.infer<typeof registrationSchema>) {
         execute({
             token: values.token,
@@ -59,7 +68,9 @@ export default function ResetPasswordPage({
     }
 
     return (
+        // Main container with centered content
         <div className="py-24 max-w-[400px] space-y-6 mx-auto">
+            {/* Success state UI - shown after successful password change */}
             {isSuccess && (
                 <>
                     <h1 className={cn(pageTitleStyles, "text-center")}>
@@ -79,12 +90,14 @@ export default function ResetPasswordPage({
                 </>
             )}
 
+            {/* Form state UI - shown when password hasn't been changed yet */}
             {!isSuccess && (
                 <>
                     <h1 className={cn(pageTitleStyles, "text-center")}>
                         Change Password
                     </h1>
 
+                    {/* Error alert - shown when password change fails */}
                     {error && (
                         <Alert variant="destructive">
                             <Terminal className="h-4 w-4" />
@@ -93,6 +106,7 @@ export default function ResetPasswordPage({
                         </Alert>
                     )}
 
+                    {/* Password reset form with validation */}
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             <FormField
